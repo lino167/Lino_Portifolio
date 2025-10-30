@@ -1,14 +1,12 @@
 import { defineDocumentType, makeSource } from 'contentlayer/source-files'
-import rehypeSlug from 'rehype-slug'
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'
-import remarkGfm from 'remark-gfm'
+import rehypeSanitize from 'rehype-sanitize'
 
 const computedFields = {
   slug: {
     type: 'string',
     resolve: (doc: any) => doc._raw.flattenedPath,
   },
-}
+} as const
 
 export const Post = defineDocumentType(() => ({
   name: 'Post',
@@ -39,10 +37,9 @@ export const Case = defineDocumentType(() => ({
 }))
 
 export default makeSource({
-  contentDirPath: 'content',
+  contentDirPath: './content',
   documentTypes: [Post, Case],
   mdx: {
-    remarkPlugins: [remarkGfm],
-    rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]],
+    rehypePlugins: [rehypeSanitize],
   },
-})
+});
